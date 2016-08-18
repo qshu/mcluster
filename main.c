@@ -103,7 +103,7 @@ int main (int argv, char **argc) {
 	double fbin = 0.0;				//Primordial binary fraction, number of binary systems = 0.5*N*fbin, only used when nbin is set to 0 
 	int pairing = 3;				//Pairing of binary components; 0= random pairing, 1= ordered pairing for components with masses M>msort, 2= random but separate pairing for components with masses m>Msort; 3= Uniform distribution of mass ratio (0.1<q<1.0) for m>Msort and random pairing for remaining (Kiminki & Kobulnicky 2012; Sana et al., 2012; Kobulnicky et al. 2014; implemented by Long Wang)
 	double msort = 5.0;				//Stars with masses > msort will be sorted and preferentially paired into binaries if pairing = 1
-	int adis = 3;					//Semi-major axis distribution; 0= flat ranging from amin to amax, 1= based on Kroupa (1995) period distribution, 2= based on Duquennoy & Mayor (1991) period distribution, 3= based on Kroupa (1995) period distribution for M<Msort; based on Sana et al. (2012); Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) period distribution for M>Msort (implemented by Long Wang)
+	int adis = 0;					//Semi-major axis distribution; 0= flat ranging from amin to amax, 1= based on Kroupa (1995) period distribution, 2= based on Duquennoy & Mayor (1991) period distribution, 3= based on Kroupa (1995) period distribution for M<Msort; based on Sana et al. (2012); Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) period distribution for M>Msort (implemented by Long Wang)
 	int OBperiods = 1;				//Use period distribution for massive binaries with M_primary > msort from Sana & Evans (2011) if OBperiods = 1
 	double amin = 0.0001;			//Minimum semi-major axis for adis = 0 [pc]
 	double amax = 0.01;				//Maximum semi-major axis for adis = 0 [pc]
@@ -111,7 +111,7 @@ int main (int argv, char **argc) {
 	int eigen = 0;					//Use Kroupa (1995) eigenevolution for pre-main sequence short-period binaries; =0 off, =1 on [use either eigenevolution or BSE; BSE recommended when using SSE]
 	int BSE = 1;					//Apply binary star evolution using BSE (Hurley, Tout & Pols 2002) =0 off, =1 on [use either eigenevolution or BSE; BSE recommended when using SSE]
 #else
-	int eigen = 1;					//Use Kroupa (1995) eigenevolution for pre-main sequence short-period binaries; =0 off, =1 on [use either eigenevolution or BSE; BSE recommended when using SSE]
+	int eigen = 0;					//Use Kroupa (1995) eigenevolution for pre-main sequence short-period binaries; =0 off, =1 on [use either eigenevolution or BSE; BSE recommended when using SSE]
 	int BSE = 0;					//Apply binary star evolution using BSE (Hurley, Tout & Pols 2002) [needs special compiling and BSE]; =0 off, =1 on [use either eigenevolution or BSE; BSE recommended when using SSE]
 #endif
 	
@@ -122,7 +122,7 @@ int main (int argv, char **argc) {
 	double extstart = 0.0;			//delay time for start of gas expulsion [Myr]
 	
 	//Code parameters
-	int code = 3;					//Nbody version: =0 Nbody6, =1 Nbody4, =2 Nbody6 custom, =3 only create output list of stars, =4 Nbody7 (not yet fully functional), =5 Nbody6++GPU
+	int code = 5;					//Nbody version: =0 Nbody6, =1 Nbody4, =2 Nbody6 custom, =3 only create output list of stars, =4 Nbody7 (not yet fully functional), =5 Nbody6++GPU
 	unsigned int seed = 0;			//Number seed for random number generator; =0 for randomization by local time
 	char *output = "test";   		//Name of output files
 	double dtadj = 1.0;				//DTADJ [N-body units (Myr in Nbody6 custom)], energy-check time step
@@ -137,7 +137,7 @@ int main (int argv, char **argc) {
 	//McLuster internal parameters
 	int match = 1;					//Make cluster half-mass radius exactly match the expected/desired value; =0 off, =1 on (recommended)
 	int symmetry = 1;				//Force spherical symmetry for fractal clusters; =0 off, =1 on (recommended)
-	int check = 0;					//Make energy check at end of McLuster; =0 off, =1 on
+	int check = 1;					//Make energy check at end of McLuster; =0 off, =1 on
 	int create_radial_profile = 1;	//Creates a radial density profile and prints it to the screen; =0 off, =1 on
 	int create_cumulative_profile = 1;	//Creates a radial cumulative profile and prints it to the screen; =0 off, =1 on
 	double Rgal = 10000.0;			//Distance of cluster from sun for artificial CMD with observational errors [pc] 
@@ -3475,7 +3475,6 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
 	if (BSE) printf("\nSetting up binary population with Z = %.4f.\n",Z);
 	if (epoch) printf("\nEvolving binary population for %.1f Myr.\n",epoch);
 	
-	
 	for (i=0; i < nbin; i++) {
 
 		do {
@@ -3488,7 +3487,9 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
 				m1 = star[2*i][0];
 				m2 = star[2*i+1][0];
 			}
-		
+			double ms = m1 + m2;
+			m1 = ms ;
+			m2 = ms / 1e10;
 			//Specify semi-major axis
 			if (((m1*M>=msort) || (m2*M>=msort)) && (OBperiods)) {
 			  if (adis == 3) {
@@ -3703,6 +3704,7 @@ int get_binaries(int nbin, double **star, double M, double rvir, int pairing, in
 
 			star[2*i][0] = m1;
 			star[2*i+1][0] = m2;
+			//star[2*i+1][0] = m2/1e10;
 
 		} while ((sqrt(vkick[0]) > vesc) && (sqrt(vkick[1]) > vesc));
 

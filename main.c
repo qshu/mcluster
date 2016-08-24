@@ -990,6 +990,8 @@ int main (int argv, char **argc) {
 	//scale masses, pos & vel to astrophysical units or Nbody units
 	tscale = sqrt(rvir*rvir*rvir/(G*M));
 
+	printf ("\nscalingInfo\t rvir = %.8f\t tscale = %.8f\n", rvir, tscale);
+
 	if (units) {		
 		printf("\nScaling to astrophysical units.\n");
 		for (j=0; j<N; j++) star[j][0] *= M;

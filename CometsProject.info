@@ -1,5 +1,5 @@
 
-McLuster model generated: Thu Aug 18 21:00:27 2016
+McLuster model generated: Fri Aug 19 16:34:56 2016
 
 
 N = 64000
@@ -55,6 +55,6 @@ gpu = 0
 regupdate = 0
 etaupdate = 0
 esc = 2
-units = 0
+units = 1
 match = 1
 symmetry = 1

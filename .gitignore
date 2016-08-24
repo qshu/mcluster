@@ -11,3 +11,7 @@ stuff/
 papers/
 testing/
 test*
+*.info
+*.input
+*.10
+log.*

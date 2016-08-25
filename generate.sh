@@ -1,4 +1,4 @@
-#make clean ; make mcluster; 
+make clean ; make mcluster; 
 #./mcluster -N 10000 -B 1000 -s 12345 -u 1 -C 5 -o CometsProject
 
 
@@ -15,4 +15,4 @@ NAME=N10k_B1k
 var=`awk '$1=="scalingInfo" {print $4, $7}' log.gen`
 echo $var
 
-python output.py $var $NAME
+python aei.py $var $NAME

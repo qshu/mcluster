@@ -104,7 +104,7 @@ int main (int argv, char **argc) {
 	int pairing = 3;				//Pairing of binary components; 0= random pairing, 1= ordered pairing for components with masses M>msort, 2= random but separate pairing for components with masses m>Msort; 3= Uniform distribution of mass ratio (0.1<q<1.0) for m>Msort and random pairing for remaining (Kiminki & Kobulnicky 2012; Sana et al., 2012; Kobulnicky et al. 2014; implemented by Long Wang)
 	double msort = 5.0;				//Stars with masses > msort will be sorted and preferentially paired into binaries if pairing = 1
 	int adis = 0;					//Semi-major axis distribution; 0= flat ranging from amin to amax, 1= based on Kroupa (1995) period distribution, 2= based on Duquennoy & Mayor (1991) period distribution, 3= based on Kroupa (1995) period distribution for M<Msort; based on Sana et al. (2012); Oh, S., Kroupa, P., & Pflamm-Altenburg, J. (2015) period distribution for M>Msort (implemented by Long Wang)
-	int OBperiods = 1;				//Use period distribution for massive binaries with M_primary > msort from Sana & Evans (2011) if OBperiods = 1
+	int OBperiods = 0;				//Use period distribution for massive binaries with M_primary > msort from Sana & Evans (2011) if OBperiods = 1
 	double amin = 0.0001;			//Minimum semi-major axis for adis = 0 [pc]
 	double amax = 0.01;				//Maximum semi-major axis for adis = 0 [pc]
 #ifdef SSE
